@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Output Charts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .chart-card {
+            flex: 1;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .chart-card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+        }
+
+        .chart-card-body {
+            padding: 20px;
+        }
+
+        .chart {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+         .table-card {
+            flex: 1;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .table-card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .table-card-body {
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+
+
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="chart-card">
+        <div class="chart-card-header">
+            Output Line Graph
+        </div>
+        <div class="chart-card-body">
+            <canvas id="myChart2" class="chart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            Output Distribution (Pie Chart)
+        </div>
+        <div class="chart-card-body">
+            <canvas id="myChart" class="chart"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            Output Distribution (Bar Chart)
+        </div>
+        <div class="chart-card-body">
+            <canvas id="myChart1" class="chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="table-container" style="margin: 1rem;">
+    <div class="table-card">
+        <div class="table-card-header">
+            Spam Tweets
+        </div>
+        <div class="table-card-body">
+            <table>
+                <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for elem in page_obj %}
+                <tr>
+                    <td>{{elem.text}}</td>
+                    <td>{{elem.username}}</td>
+                    <td>{{elem.date}}</td>
+                    <td>{{elem.output}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-card-header">
+            Not Spam Tweets
+        </div>
+        <div class="table-card-body">
+            <table>
+                <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>User</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for elem in page_obj_1 %}
+                <tr>
+                    <td>{{elem.text}}</td>
+                    <td>{{elem.username}}</td>
+                    <td>{{elem.date}}</td>
+                    <td>{{elem.output}}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+            <span class="step-links">
+                {% if page_obj_1.has_previous %}
+                    <a href="?page1=1">&laquo; first</a>
+                    <a href="?page1={{ page_obj_1.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page1={{ page_obj_1.next_page_number }}">next</a>
+                    <a href="?page1={{ page_obj_1.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
+
+<script>
+    var dateList = {{ date_lists|safe }};
+    var numSpamList = {{ numSpam_list }};
+    var numNotSpamList = {{ numNotSpam_list }};
+
+    var xValues = ["Spam", "Not Spam"];
+    var num_yes = {{ num_yes }};
+    var num_no = {{ num_no }};
+    var yValues = [num_yes, num_no];
+    var xValues1 = ["Greater than 10", "Less than 10", "Zero Spam"];
+    var num_greater_than_ten = {{ num_greater_than_ten }};
+    var num_smaller_than_ten = {{ num_smaller_than_ten }};
+    var num_of_zero_spam = {{ num_of_zero_spam }};
+    var yValues1 = [num_greater_than_ten, num_smaller_than_ten, num_of_zero_spam];
+    var barColors1 = ["orange", "blue", "green"];
+    var barColors = [
+        "#b91d47",
+        "#00aba9"
+    ];
+
+    new Chart("myChart2", {
+        type: "line",
+        data: {
+            labels: dateList,
+            datasets: [{
+                data: numSpamList,
+                borderColor: "red",
+                fill: false,
+                label: 'Spam',
+            }, {
+                data: numNotSpamList,
+                borderColor: "green",
+                fill: false,
+                label: 'Not Spam',
+            }]
+        },
+        options: {
+            legend: { display: true },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    new Chart("myChart", {
+        type: "doughnut",
+        data: {
+            labels: xValues,
+            datasets: [{
+                backgroundColor: barColors,
+                data: yValues
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                fontSize: 16,
+                fontColor: "#333"
+            },
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    new Chart("myChart1", {
+        type: "bar",
+        data: {
+            labels: xValues1,
+            datasets: [{
+                backgroundColor: barColors1,
+                data: yValues1
+            }]
+        },
+        options: {
+            legend: { display: false },
+            title: {
+                display: true,
+                fontSize: 16,
+                fontColor: "#333"
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontColor: "#555"
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        fontColor: "#555"
+                    }
+                }]
+            }
+        }
+    });
+
+
+
+
+</script>
+
+</body>
+</html>
