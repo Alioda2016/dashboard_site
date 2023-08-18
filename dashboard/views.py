@@ -250,9 +250,9 @@ def process_relevant_selected(request):
         page_obj_1 = paginator.get_page(page_number1)
 
         # get numbers of users
-        num_greater_than_ten = Result.objects.filter(user_count__gt=10).count()
-        num_smaller_than_ten = Result.objects.filter(user_count__lte=10).count()
-        num_of_zero_relevant = Result.objects.filter(user_count=0).count()
+        num_greater_than_ten = Relevant.objects.filter(user_count__gt=10).count()
+        num_smaller_than_ten = Relevant.objects.filter(user_count__lte=10).count()
+        num_of_zero_relevant = Relevant.objects.filter(user_count=0).count()
 
         # Query to get user stats
         user_stats = Relevant.objects.values('username').annotate(
