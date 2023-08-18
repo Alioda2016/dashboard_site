@@ -1,0 +1,7 @@
+ar-bert-spamda-model/tf_model.h5
+ar-bert-spamda-model/vocab.txt
+ar-bert-spamda-model/config.json
+ar-bert-spamda-model/special_tokens_map.json
+ar-bert-spamda-model/tf_model.preproc
+ar-bert-spamda-model/tokenizer_config.json
+ar-bert-spamda-model/tokenizer.json

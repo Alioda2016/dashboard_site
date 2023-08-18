@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not Spam Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f5f5f5;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+      .pagination {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pagination a {
+            color: #333;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .pagination a:hover {
+            background-color: #f5f5f5;
+            color: #555;
+        }
+
+        .pagination .current {
+            font-weight: bold;
+            margin: 0 0.5rem;
+        }
+
+        button[type="submit"] {
+            background-color: #828c97;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Not Spam Results</h1>
+</div>
+<div class="container">
+    <div class="table-card">
+        <form method="post" action="{% url 'selected_results' %}">
+            {% csrf_token %}
+            <table>
+                <thead>
+                <tr>
+                    <th><label id="select-all-label"><input type="checkbox" id="select-all"> Select All</label></th>
+                    <th>Text</th>
+                    <th>Username</th>
+                    <th>Date</th>
+                    <th>Output</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for result in page_obj %}
+                <tr>
+                    <td><input type="checkbox" name="selected_rows" value="{{ result.id }}"></td>
+                    <td>{{ result.text }}</td>
+                    <td>{{ result.username }}</td>
+                    <td>{{ result.date }}</td>
+                    <td>{{ result.output }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+            </div>
+            <button type="submit">Process Selected</button>
+        </form>
+    </div>
+</div>
+
+<script>
+        // Function to toggle all checkboxes
+        document.getElementById('select-all').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('input[name="selected_rows"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+        });
+
+
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Output Charts</title>
+    <title>Relevant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
     <style>
         body {
@@ -144,7 +144,8 @@
 <div class="table-container" style="margin: 1rem;">
     <div class="table-card">
         <div class="table-card-header">
-            Spam Tweets
+            Relevant Tweets
+            <a href="{% url 'categorical_relevant' %}" class="custom-button">Categorical Relevant View</a>
         </div>
         <div class="table-card-body">
             <table>
@@ -189,8 +190,7 @@
 
     <div class="table-card">
         <div class="table-card-header">
-            Not Spam Tweets
-            <a href="{% url 'process_relevant' %}" class="custom-button">Go to Relevant View</a>
+            Not Relevant Tweets
         </div>
         <div class="table-card-body">
             <table>
@@ -242,8 +242,8 @@
                 <thead>
                 <tr>
                     <th>User</th>
-                    <th>Number of Spam</th>
-                    <th>Number of Not Spam</th>
+                    <th>Number of Relevant</th>
+                    <th>Number of Not Relevant</th>
                     <th>Total</th>
                 </tr>
                 </thead>
@@ -251,8 +251,8 @@
                 {% for elem in user_info %}
                 <tr>
                     <td>{{elem.user}}</td>
-                    <td>{{elem.spam}}</td>
-                    <td>{{elem.not_spam}}</td>
+                    <td>{{elem.relevant}}</td>
+                    <td>{{elem.not_relevant}}</td>
                     <td>{{elem.total}}</td>
                 </tr>
                 {% endfor %}
@@ -283,38 +283,37 @@
 
 <script>
     var dateList = {{ date_lists|safe }};
-    var numSpamList = {{ numSpam_list }};
-    var numNotSpamList = {{ numNotSpam_list }};
+    var numRelevantList = {{ num_relevant_list }};
+    var numNotRelevantList = {{ num_not_relevant_list }};
 
-    var xValues = ["Not Spam", "Spam"];
+    var xValues = ["Not Relevant", "Relevant"];
     var num_yes = {{ num_yes }};
     var num_no = {{ num_no }};
     var yValues = [num_yes, num_no];
-    var xValues1 = ["Greater than 10", "Less than 10", "Zero Spam"];
+    var xValues1 = ["Greater than 10", "Less than 10", "Zero Relevant"];
     var num_greater_than_ten = {{ num_greater_than_ten }};
     var num_smaller_than_ten = {{ num_smaller_than_ten }};
-    var num_of_zero_spam = {{ num_of_zero_spam }};
-    var yValues1 = [num_greater_than_ten, num_smaller_than_ten, num_of_zero_spam];
+    var num_of_zero_relevant = {{ num_of_zero_relevant }};
+    var yValues1 = [num_greater_than_ten, num_smaller_than_ten, num_of_zero_relevant];
     var barColors1 = ["orange", "blue", "green"];
     var barColors = [
         "#b91d47",
-        "#00aba9"
-    ];
+        "#00aba9"];
 
     new Chart("myChart2", {
         type: "line",
         data: {
             labels: dateList,
             datasets: [{
-                data: numSpamList,
+                data: numRelevantList,
                 borderColor: "red",
                 fill: false,
-                label: 'Spam',
+                label: 'Relevant',
             }, {
-                data: numNotSpamList,
+                data: numNotRelevantList,
                 borderColor: "green",
                 fill: false,
-                label: 'Not Spam',
+                label: 'Not Relevant',
             }]
         },
         options: {

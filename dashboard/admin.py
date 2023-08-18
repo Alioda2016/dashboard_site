@@ -1,9 +1,9 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Dataset
-from .models import Result
+from .models import Dataset, Result, Relevant
 
 admin.site.register(Dataset)
 admin.site.register(Result)
+admin.site.register(Relevant)
 
