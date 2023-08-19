@@ -105,7 +105,17 @@
             background-color: #0056b3;
         }
 
-
+         button[type="submit"] {
+            background-color: darkgreen;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 0.7rem;
+            border-radius: 8px;
+        }
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
 
     </style>
 </head>
@@ -245,6 +255,7 @@
                     <th>Number of Spam</th>
                     <th>Number of Not Spam</th>
                     <th>Total</th>
+                    <th>Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -254,6 +265,7 @@
                     <td>{{elem.spam}}</td>
                     <td>{{elem.not_spam}}</td>
                     <td>{{elem.total}}</td>
+                    <td><button type="submit">Add to Spam Blacklist</button></td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -377,8 +389,6 @@
             }
         }
     });
-
-
 
 
 

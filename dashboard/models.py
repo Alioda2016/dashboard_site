@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import datetime
 
 
 # Create your models here.
@@ -8,7 +9,7 @@ class Dataset(models.Model):
     predicted = models.BooleanField(default=False)
     id = models.CharField(max_length=100, primary_key=True)
     username = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateTimeField()
 
     def __str__(self):
         return self.username
