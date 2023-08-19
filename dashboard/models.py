@@ -20,7 +20,7 @@ class Result(models.Model):
     output = models.BooleanField()
     id = models.CharField(max_length=100, primary_key=True)
     username = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateTimeField()
     user_count = models.IntegerField(default=0)  # New field for user count
 
     def __str__(self):
@@ -40,7 +40,7 @@ class Relevant(models.Model):
     relevant = models.BooleanField()
     id = models.CharField(max_length=100, primary_key=True)
     username = models.CharField(max_length=100)
-    date = models.DateField()
+    date = models.DateTimeField()
     user_count = models.IntegerField(default=0)  # New field for user count
 
     def __str__(self):

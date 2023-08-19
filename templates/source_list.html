@@ -35,6 +35,15 @@
         td input[type="checkbox"] {
             margin-right: 5px;
         }
+
+        .table-card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            text-align: center;
+        }
+
         form {
             margin: 20px 0;
             padding: 0 10px;
@@ -81,6 +90,9 @@
 </head>
 <body>
     <h2>Source Data</h2>
+    <div class="table-card-header">
+        Select tweets for spam detection
+    </div>
     <form method="post" action="{% url 'output_graph' %}">
         {% csrf_token %}
         <table>
@@ -98,7 +110,7 @@
                         <td><input type="checkbox" name="selected_rows" value="{{ source.id }}"></td>
                         <td>{{ source.text }}</td>
                         <td>{{ source.username }}</td>
-                        <td>{{ source.date|date:"Y-m-d" }}</td>
+                        <td>{{ source.date }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

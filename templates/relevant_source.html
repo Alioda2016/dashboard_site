@@ -19,6 +19,14 @@
             padding: 1rem;
         }
 
+        .table-card-header {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            text-align: center;
+        }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -85,13 +93,17 @@
             background-color: #0056b3;
         }
 
+
     </style>
 </head>
 <body>
 <div class="header">
-    <h1>Not Spam Results</h1>
+    <h1>Predicted Not Spam Results</h1>
 </div>
 <div class="container">
+    <div class="table-card-header">
+        Select Tweets For Binary Classification Relevance Classification
+    </div>
     <div class="table-card">
         <form method="post" action="{% url 'selected_results' %}">
             {% csrf_token %}
@@ -102,7 +114,6 @@
                     <th>Text</th>
                     <th>Username</th>
                     <th>Date</th>
-                    <th>Output</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -112,7 +123,6 @@
                     <td>{{ result.text }}</td>
                     <td>{{ result.username }}</td>
                     <td>{{ result.date }}</td>
-                    <td>{{ result.output }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -147,6 +157,7 @@
                 checkbox.checked = this.checked;
             });
         });
+
 
 
 </script>

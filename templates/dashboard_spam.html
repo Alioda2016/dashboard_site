@@ -163,7 +163,6 @@
                     <th>Text</th>
                     <th>User</th>
                     <th>Date</th>
-                    <th>Type</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -172,7 +171,6 @@
                     <td>{{elem.text}}</td>
                     <td>{{elem.username}}</td>
                     <td>{{elem.date}}</td>
-                    <td>{{elem.output}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -200,7 +198,8 @@
     <div class="table-card">
         <div class="table-card-header">
             Not Spam Tweets
-            <a href="{% url 'process_relevant' %}" class="custom-button">Go to Relevant View</a>
+            <a href="{% url 'process_relevant' %}" class="custom-button">Go to Binary Relevant View</a>
+            <a href="{% url 'categorical_relevant' %}" class="custom-button">Go to Categorical Relevant View</a>
         </div>
         <div class="table-card-body">
             <table>
@@ -209,7 +208,6 @@
                     <th>Text</th>
                     <th>User</th>
                     <th>Date</th>
-                    <th>Type</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -218,7 +216,6 @@
                     <td>{{elem.text}}</td>
                     <td>{{elem.username}}</td>
                     <td>{{elem.date}}</td>
-                    <td>{{elem.output}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
