@@ -266,7 +266,6 @@ def process_relevant_selected(request):
         # Get the number of users with user count equals zero
         num_users_of_zero_relevant = Relevant.objects.filter(user_count=0).values('username').distinct().count()
 
-
         # Query to get user stats
         user_stats = Relevant.objects.values('username').annotate(
             relevant_s=Count('relevant', filter=Q(relevant=False)),
@@ -384,7 +383,8 @@ def categorical_relevant_dashboard(request):
     dates_list_3 = Categorical.objects.values_list('date', flat=True).distinct()
 
     # Aggregate the number of True values in the Categorical field for each date
-    threes_counts_by_date = Categorical.objects.filter(category=3).values('date').annotate(threes_count=Count('category'))
+    threes_counts_by_date = Categorical.objects.filter(category=3).values('date').annotate(
+        threes_count=Count('category'))
 
     # Create a dictionary to store the results
     threes_counts_dict = {entry['date']: entry['threes_count'] for entry in threes_counts_by_date}
@@ -398,6 +398,17 @@ def categorical_relevant_dashboard(request):
     threes_data = results.filter(category=3)
 
     data_all = Categorical.objects.all();
+
+    # Create a dictionary to map category values to relevance names
+    category_mapping = {
+        1: "Low Relevance",
+        2: "Mid Relevance",
+        3: "High Relevance"
+    }
+
+    # Iterate through the queryset and modify the category field
+    for item in data_all:
+        item.category = category_mapping.get(item.category, "Unknown")
 
     # Pagination
     page_number = request.GET.get('page')
@@ -423,4 +434,3 @@ def categorical_relevant_dashboard(request):
                       'num_threes_list': num_threes_list,
                       'page_obj': page_obj,
                   })
-
