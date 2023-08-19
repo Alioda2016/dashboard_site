@@ -132,7 +132,7 @@
 
     <div class="chart-card">
         <div class="chart-card-header">
-            User Distribution Based on Relevant Tweet Counts
+            User Distribution Based on Not Relevant Tweet Counts
         </div>
         <div class="chart-card-body">
             <canvas id="myChart1" class="chart"></canvas>
@@ -290,7 +290,7 @@
     var num_yes = {{ num_yes }};
     var num_no = {{ num_no }};
     var yValues = [num_yes, num_no];
-    var xValues1 = ["Greater than 10", "Less than 10", "Zero Relevant"];
+    var xValues1 = ["Greater than 10", "Less than 10", "Fully Relevant"];
     var num_greater_than_ten = {{ num_greater_than_ten }};
     var num_smaller_than_ten = {{ num_smaller_than_ten }};
     var num_of_zero_relevant = {{ num_of_zero_relevant }};
