@@ -48,6 +48,17 @@ class Relevant(models.Model):
 
     def update_user_count(self):
         print(f"Updating user count for username: {self.username}")
-        user_false_count = Relevant.objects.filter(username=self.username, relevant=False).count()
+        user_false_count = Categorical.objects.filter(username=self.username, relevant=False).count()
         self.user_count = user_false_count
         self.save()
+
+
+class Categorical(models.Model):
+    text = models.TextField()
+    id = models.CharField(max_length=100, primary_key=True)
+    username = models.CharField(max_length=100)
+    date = models.DateTimeField()
+    category = models.IntegerField()
+
+    def __str__(self):
+        return self.username

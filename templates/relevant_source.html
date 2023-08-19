@@ -10,6 +10,8 @@
             margin: 0;
             padding: 0;
             background-color: #f4f4f4;
+            font-size: large;
+            font-family: system-ui,'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
         .header {
@@ -28,11 +30,12 @@
         }
 
         .container {
-            max-width: 800px;
             margin: 0 auto;
             padding: 2rem;
             background-color: #fff;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-left: 10rem;
+            margin-right: 10rem;
         }
 
         table {
@@ -44,7 +47,7 @@
         th, td {
             border: 1px solid #ddd;
             padding: 0.5rem;
-            text-align: left;
+            text-align: right;
         }
 
         th {
@@ -81,24 +84,41 @@
         }
 
         button[type="submit"] {
-            background-color: #828c97;
+            background-color: green;
             color: white;
             border: none;
             padding: 0.5rem 1rem;
             cursor: pointer;
             transition: background-color 0.3s;
+            padding: 1rem;
+            border-radius: 8px;
         }
 
         button[type="submit"]:hover {
             background-color: #0056b3;
         }
 
+        button[type="button"] {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            padding: 1rem;
+            border-radius: 8px;
+            float: right;
+        }
+
+        button[type="button"]:hover {
+            background-color: #0056b3;
+        }
 
     </style>
 </head>
 <body>
 <div class="header">
-    <h1>Predicted Not Spam Results</h1>
+    <h2>Predicted Not Spam Results</h2>
 </div>
 <div class="container">
     <div class="table-card-header">
@@ -110,19 +130,19 @@
             <table>
                 <thead>
                 <tr>
-                    <th><label id="select-all-label"><input type="checkbox" id="select-all"> Select All</label></th>
-                    <th>Text</th>
-                    <th>Username</th>
                     <th>Date</th>
+                    <th>Username</th>
+                    <th>Text</th>
+                    <th><label id="select-all-label"><input type="checkbox" id="select-all"> Select All</label></th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for result in page_obj %}
                 <tr>
-                    <td><input type="checkbox" name="selected_rows" value="{{ result.id }}"></td>
-                    <td>{{ result.text }}</td>
-                    <td>{{ result.username }}</td>
                     <td>{{ result.date }}</td>
+                    <td>{{ result.username }}</td>
+                    <td style="width: 50%;">{{ result.text }}</td>
+                    <td><input type="checkbox" name="selected_rows" value="{{ result.id }}"></td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -144,7 +164,8 @@
                 {% endif %}
             </span>
             </div>
-            <button type="submit">Process Selected</button>
+            <button type="submit">Use Binary Relevant</button>
+            <button type="button" id="useCategoricalRelevantButton">Use Categorical Relevant</button>
         </form>
     </div>
 </div>
@@ -156,10 +177,21 @@
             checkboxes.forEach(checkbox => {
                 checkbox.checked = this.checked;
             });
+            window.scrollTo(0, document.body.scrollHeight);
         });
 
-
-
+         // Handling "Use Categorical Relevant" button click
+    document.getElementById('useCategoricalRelevantButton').addEventListener('click', function() {
+        const selectedRows = document.querySelectorAll('input[name="selected_rows"]:checked');
+        if (selectedRows.length > 0) {
+            const selectedIds = Array.from(selectedRows).map(row => row.value);
+            const url = "{% url 'categorical_relevant' %}" + "?selected_rows=" + selectedIds.join(",");
+            window.location.href = url;
+        } else {
+            // Handle case when no rows are selected
+            alert("No rows selected for Categorical Relevant.");
+        }
+    });
 </script>
 </body>
 </html>

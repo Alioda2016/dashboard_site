@@ -11,6 +11,8 @@
             background-color: #f4f4f4;
             margin: 0;
             padding: 0;
+            font-size: large;
+            font-family: system-ui,'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
         .container {
@@ -79,7 +81,7 @@
         th, td {
             border: 1px solid #ddd;
             padding: 8px;
-            text-align: left;
+            text-align: right;
         }
 
         th {
@@ -104,6 +106,22 @@
         .custom-button:hover {
             background-color: #0056b3;
         }
+
+
+ button[type="submit"] {
+            background-color: darkgreen;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            padding: 0.7rem;
+            border-radius: 8px;
+        }
+        button[type="submit"]:hover {
+            background-color: #555;
+        }
+
+
+
 
 
 
@@ -150,19 +168,21 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Text</th>
-                    <th>User</th>
+                    <th>Action</th>
                     <th>Date</th>
-                    <th>Type</th>
+                    <th>User</th>
+                    <th>Text</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for elem in page_obj %}
                 <tr>
-                    <td>{{elem.text}}</td>
-                    <td>{{elem.username}}</td>
+                    <td>
+                        <button type="submit">Mark As Not Relevant</button>
+                    </td>
                     <td>{{elem.date}}</td>
-                    <td>{{elem.output}}</td>
+                    <td>{{elem.username}}</td>
+                    <td style="width: 50%;">{{elem.text}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -195,19 +215,21 @@
             <table>
                 <thead>
                 <tr>
-                    <th>Text</th>
-                    <th>User</th>
+                    <th>Action</th>
                     <th>Date</th>
-                    <th>Type</th>
+                    <th>User</th>
+                    <th>Text</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for elem in page_obj_1 %}
                 <tr>
-                    <td>{{elem.text}}</td>
-                    <td>{{elem.username}}</td>
+                    <td>
+                        <button type="submit">Mark As Relevant</button>
+                    </td>
                     <td>{{elem.date}}</td>
-                    <td>{{elem.output}}</td>
+                    <td>{{elem.username}}</td>
+                    <td style="width: 50%;">{{elem.text}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -223,7 +245,7 @@
                     Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.
                 </span>
 
-                {% if page_obj.has_next %}
+                {% if page_obj_1.has_next %}
                     <a href="?page1={{ page_obj_1.next_page_number }}">next</a>
                     <a href="?page1={{ page_obj_1.paginator.num_pages }}">last &raquo;</a>
                 {% endif %}
@@ -240,40 +262,44 @@
             <table>
                 <thead>
                 <tr>
-                    <th>User</th>
-                    <th>Number of Relevant</th>
-                    <th>Number of Not Relevant</th>
+                    <th>Action</th>
                     <th>Total</th>
+                    <th>Number of Not Relevant</th>
+                    <th>Number of Relevant</th>
+                    <th>User</th>
                 </tr>
                 </thead>
                 <tbody>
-                {% for elem in user_info %}
+                {% for elem in page_obj_2 %}
                 <tr>
-                    <td>{{elem.user}}</td>
-                    <td>{{elem.relevant}}</td>
-                    <td>{{elem.not_relevant}}</td>
+                    <td>
+                        <button type="submit">Add to Relevant Blacklist</button>
+                    </td>
                     <td>{{elem.total}}</td>
+                    <td>{{elem.not_relevant}}</td>
+                    <td>{{elem.relevant}}</td>
+                    <td>{{elem.user}}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
             </table>
-<!--            <div class="pagination">-->
-<!--            <span class="step-links">-->
-<!--                {% if page_obj_1.has_previous %}-->
-<!--                    <a href="?page1=1">&laquo; first</a>-->
-<!--                    <a href="?page1={{ page_obj_1.previous_page_number }}">previous</a>-->
-<!--                {% endif %}-->
+         <div class="pagination">
+            <span class="step-links">
+                {% if page_obj_2.has_previous %}
+                    <a href="?page2=1">&laquo; first</a>
+                    <a href="?page2={{ page_obj_2.previous_page_number }}">previous</a>
+                {% endif %}
 
-<!--                <span class="current">-->
-<!--                    Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.-->
-<!--                </span>-->
+                <span class="current">
+                    Page {{ page_obj_2.number }} of {{ page_obj_2.paginator.num_pages }}.
+                </span>
 
-<!--                {% if page_obj.has_next %}-->
-<!--                    <a href="?page1={{ page_obj_1.next_page_number }}">next</a>-->
-<!--                    <a href="?page1={{ page_obj_1.paginator.num_pages }}">last &raquo;</a>-->
-<!--                {% endif %}-->
-<!--            </span>-->
-<!--            </div>-->
+                {% if page_obj.has_next %}
+                    <a href="?page2={{ page_obj_2.next_page_number }}">next</a>
+                    <a href="?page2={{ page_obj_2.paginator.num_pages }}">last &raquo;</a>
+                {% endif %}
+            </span>
+            </div>
         </div>
     </div>
 </div>
@@ -376,6 +402,12 @@
             }
         }
     });
+
+
+
+
+
+
 
 
 

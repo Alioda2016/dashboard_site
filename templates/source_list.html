@@ -8,6 +8,8 @@
             margin: 0;
             padding: 0;
             background-color: #f5f5f5;
+            font-size: large;
+            font-family: system-ui,'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
         }
         h2 {
             text-align: center;
@@ -22,10 +24,11 @@
             margin: 20px 0;
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            
         }
         th, td {
             padding: 10px;
-            text-align: left;
+            text-align: right;
             border-bottom: 1px solid #ddd;
         }
         th {
@@ -36,25 +39,20 @@
             margin-right: 5px;
         }
 
-        .table-card-header {
-            background-color: #f0f0f0;
-            padding: 10px;
-            border-bottom: 1px solid #e0e0e0;
-            font-weight: bold;
-            text-align: center;
-        }
-
         form {
-            margin: 20px 0;
+            margin: -16px 0;
             padding: 0 10px;
+            margin-left: 10rem;
+            margin-right: 10rem;
         }
         button[type="submit"] {
-            background-color: #4d4444;
+            background-color: green;
             color: #fff;
             border: none;
             cursor: pointer;
             padding: 0.7rem;
             border-radius: 8px;
+            margin-bottom: 2rem;
         }
         button[type="submit"]:hover {
             background-color: #555;
@@ -85,32 +83,30 @@
             for (var i = 0; i < checkboxes.length; i++) {
                 checkboxes[i].checked = checkAllCheckbox.checked;
             }
+            window.scrollTo(0, document.body.scrollHeight);
         }
     </script>
 </head>
 <body>
-    <h2>Source Data</h2>
-    <div class="table-card-header">
-        Select tweets for spam detection
-    </div>
+    <h2>Select tweets for spam detection</h2>
     <form method="post" action="{% url 'output_graph' %}">
         {% csrf_token %}
         <table>
             <thead>
                 <tr>
-                    <th><input type="checkbox" onclick="toggleCheckboxes()"></th>
-                    <th>Text</th>
-                    <th>Username</th>
                     <th>Date</th>
+                    <th>Username</th>
+                    <th>Text</th>
+                    <th><input type="checkbox" onclick="toggleCheckboxes()"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for source in sources %}
                     <tr>
-                        <td><input type="checkbox" name="selected_rows" value="{{ source.id }}"></td>
-                        <td>{{ source.text }}</td>
-                        <td>{{ source.username }}</td>
                         <td>{{ source.date }}</td>
+                        <td>{{ source.username }}</td>
+                        <td style="width: 50%;">{{ source.text }}</td>
+                        <td><input type="checkbox" id="id_checkbox" name="selected_rows" value="{{ source.id }}"></td>
                     </tr>
                 {% endfor %}
             </tbody>

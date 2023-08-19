@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Output Charts</title>
+    <title>Relevant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
     <style>
         body {
@@ -107,7 +107,8 @@
             background-color: #0056b3;
         }
 
-         button[type="submit"] {
+
+ button[type="submit"] {
             background-color: darkgreen;
             color: #fff;
             border: none;
@@ -121,6 +122,9 @@
 
 
 
+
+
+
     </style>
 </head>
 <body>
@@ -128,7 +132,7 @@
 <div class="container">
     <div class="chart-card">
         <div class="chart-card-header">
-            Temporal Distribution of Spam Tweets
+            Temporal Distribution of Categorical Tweets
         </div>
         <div class="chart-card-body">
             <canvas id="myChart2" class="chart"></canvas>
@@ -137,19 +141,10 @@
 
     <div class="chart-card">
         <div class="chart-card-header">
-            Spam and Non-Spam Tweets Count
+            Categorical Tweets Count
         </div>
         <div class="chart-card-body">
             <canvas id="myChart" class="chart"></canvas>
-        </div>
-    </div>
-
-    <div class="chart-card">
-        <div class="chart-card-header">
-            User Distribution Based on Spam Tweet Counts
-        </div>
-        <div class="chart-card-body">
-            <canvas id="myChart1" class="chart"></canvas>
         </div>
     </div>
 
@@ -158,13 +153,13 @@
 <div class="table-container" style="margin: 1rem;">
     <div class="table-card">
         <div class="table-card-header">
-            Spam Tweets
+            Categorical Relevant Tweets Results
         </div>
         <div class="table-card-body">
             <table>
                 <thead>
                 <tr>
-                    <th>Action</th>
+                    <th>Relevant Category</th>
                     <th>Date</th>
                     <th>User</th>
                     <th>Text</th>
@@ -173,9 +168,7 @@
                 <tbody>
                 {% for elem in page_obj %}
                 <tr>
-                    <td>
-                        <button type="submit">Mark As Not Spam</button>
-                    </td>
+                    <td>{{elem.category}}</td>
                     <td>{{elem.date}}</td>
                     <td>{{elem.username}}</td>
                     <td style="width: 50%;">{{elem.text}}</td>
@@ -202,142 +195,42 @@
             </div>
         </div>
     </div>
-
-    <div class="table-card">
-        <div class="table-card-header">
-            <a href="{% url 'process_relevant' %}" class="custom-button">Go to Relevant View</a>
-            Not Spam Tweets
-        </div>
-        <div class="table-card-body">
-            <table>
-                <thead>
-                <tr>
-                    <th>Action</th>
-                    <th>Date</th>
-                    <th>User</th>
-                    <th>Text</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for elem in page_obj_1 %}
-                <tr>
-                    <td>
-                        <button type="submit">Mark As Spam</button>
-                    </td>
-                    <td>{{elem.date}}</td>
-                    <td>{{elem.username}}</td>
-                    <td style="width: 50%;">{{elem.text}}</td>
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="pagination">
-            <span class="step-links">
-                {% if page_obj_1.has_previous %}
-                    <a href="?page1=1">&laquo; first</a>
-                    <a href="?page1={{ page_obj_1.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj_1.number }} of {{ page_obj_1.paginator.num_pages }}.
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page1={{ page_obj_1.next_page_number }}">next</a>
-                    <a href="?page1={{ page_obj_1.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-            </div>
-        </div>
-    </div>
-
-    <div class="table-card">
-        <div class="table-card-header">
-            Total Spam and Non-Spam Tweet Counts per User
-        </div>
-        <div class="table-card-body">
-            <table>
-                <thead>
-                <tr>
-                    <th>Action</th>
-                    <th>Total</th>
-                    <th>Number of Not Spam</th>
-                    <th>Number of Spam</th>
-                    <th>User</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for elem in page_obj_2 %}
-                <tr>
-                    <td>
-                        <button type="submit">Add to Spam Blacklist</button>
-                    </td>
-                    <td>{{elem.total}}</td>
-                    <td>{{elem.not_spam}}</td>
-                    <td>{{elem.spam}}</td>
-                    <td>{{elem.user}}</td>
-
-                </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            <div class="pagination">
-            <span class="step-links">
-                {% if page_obj_2.has_previous %}
-                    <a href="?page2=1">&laquo; first</a>
-                    <a href="?page2={{ page_obj_2.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ page_obj_2.number }} of {{ page_obj_2.paginator.num_pages }}.
-                </span>
-
-                {% if page_obj.has_next %}
-                    <a href="?page2={{ page_obj_2.next_page_number }}">next</a>
-                    <a href="?page2={{ page_obj_2.paginator.num_pages }}">last &raquo;</a>
-                {% endif %}
-            </span>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.bundle.min.js"></script>
 
 <script>
     var dateList = {{ date_lists|safe }};
-    var numSpamList = {{ numSpam_list }};
-    var numNotSpamList = {{ numNotSpam_list }};
+    var num_ones_list = {{ num_ones_list }};
+    var num_twos_list = {{ num_twos_list }};
+    var num_threes_list = {{ num_threes_list }};
 
-    var xValues = ["Not Spam", "Spam"];
-    var num_yes = {{ num_yes }};
-    var num_no = {{ num_no }};
-    var yValues = [num_yes, num_no];
-    var xValues1 = ["Greater than 10", "Less than 10", "Zero Spam"];
-    var num_greater_than_ten = {{ num_greater_than_ten }};
-    var num_smaller_than_ten = {{ num_smaller_than_ten }};
-    var num_of_zero_spam = {{ num_of_zero_spam }};
-    var yValues1 = [num_greater_than_ten, num_smaller_than_ten, num_of_zero_spam];
-    var barColors1 = ["red", "orange", "green"];
-    var barColors = [
-        "green",
-        "red"
-    ];
+    var xValues = ["Low Relevance", "Mid Relevance", "High Relevance"];
+    var num_of_1 = {{ num_of_1 }};
+    var num_of_2 = {{ num_of_2 }};
+    var num_of_3 = {{ num_of_3 }};
+    var yValues = [num_of_1, num_of_2, num_of_3];
+    var barColors = ["red","orange", "green"];
 
     new Chart("myChart2", {
         type: "line",
         data: {
             labels: dateList,
             datasets: [{
-                data: numSpamList,
+                data: num_ones_list,
                 borderColor: "red",
                 fill: false,
-                label: 'Spam',
+                label: 'Low Relevance',
             }, {
-                data: numNotSpamList,
+                data: num_twos_list,
+                borderColor: "orange",
+                fill: false,
+                label: 'Mid Relevance',
+            },{
+                data: num_threes_list,
                 borderColor: "green",
                 fill: false,
-                label: 'Not Spam',
+                label: 'High Relevance',
             }]
         },
         options: {
@@ -366,45 +259,6 @@
             maintainAspectRatio: false
         }
     });
-
-    new Chart("myChart1", {
-        type: "bar",
-        data: {
-            labels: xValues1,
-            datasets: [{
-                backgroundColor: barColors1,
-                data: yValues1
-            }]
-        },
-        options: {
-            legend: { display: false },
-            title: {
-                display: true,
-                fontSize: 16,
-                fontColor: "#333"
-            },
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero: true,
-                        fontColor: "#555"
-                    }
-                }],
-                xAxes: [{
-                    ticks: {
-                        fontColor: "#555"
-                    }
-                }]
-            }
-        }
-    });
-
-
-
-
-
 </script>
 
 </body>
