@@ -24,7 +24,7 @@ class Result(models.Model):
     user_count = models.IntegerField(default=0)  # New field for user count
 
     def __str__(self):
-        return self.date
+        return self.username
 
     def update_user_count(self):
         print(f"Updating user count for username: {self.username}")

@@ -15,8 +15,8 @@ import ktrain
 from ktrain import text
 import random
 from django.db.models import Count, Q  # Import Count and Q
-from .middleware import CustomMiddleware
-
+from django.shortcuts import render
+from . import global_vars
 # Create your views here.
 
 def index(request):
@@ -24,10 +24,6 @@ def index(request):
 
 
 def source_list(request):
-    custom_variable_value = request.custom_variable
-    print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
-    print(custom_variable_value)
-    print("hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh")
     sources = Dataset.objects.all().values('id', 'text', 'username', 'date')
     paginator = Paginator(sources, 5)  # Display 10 items per page
     page_number = request.GET.get('page')
@@ -39,9 +35,11 @@ def process_selected(request):
     selected_ids = request.POST.getlist('selected_rows')
     selected_rows = Dataset.objects.filter(id__in=selected_ids)
     for row in selected_rows:
-        prediction_value = random.choice([True, False])
+        # prediction_value = random.choice([True, False])
+        predictor = global_vars.predictor
+        prediction_value = predictor.predict(new_review)
         if prediction_value:
-            prediction_value = 1
+            prediction_value = 'yes'
         else:
             prediction_value = 0
         print(prediction_value)
