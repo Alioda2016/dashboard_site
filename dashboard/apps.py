@@ -1,5 +1,8 @@
 from django.apps import AppConfig
 from . import global_vars
+#from keras.models import load_model
+import ktrain
+from ktrain import text
 
 class DashboardConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
