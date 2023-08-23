@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Output Charts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+    <script src='https://cdn.plot.ly/plotly-2.25.2.min.js'></script>
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -324,28 +326,28 @@
         "red"
     ];
 
-    new Chart("myChart2", {
-        type: "line",
-        data: {
-            labels: dateList,
-            datasets: [{
-                data: numSpamList,
-                borderColor: "red",
-                fill: false,
-                label: 'Spam',
-            }, {
-                data: numNotSpamList,
-                borderColor: "green",
-                fill: false,
-                label: 'Not Spam',
-            }]
-        },
-        options: {
-            legend: { display: true },
-            responsive: true,
-            maintainAspectRatio: false
-        }
-    });
+    // new Chart("myChart2", {
+    //     type: "line",
+    //     data: {
+    //         labels: dateList,
+    //         datasets: [{
+    //             data: numSpamList,
+    //             borderColor: "red",
+    //             fill: false,
+    //             label: 'Spam',
+    //         }, {
+    //             data: numNotSpamList,
+    //             borderColor: "green",
+    //             fill: false,
+    //             label: 'Not Spam',
+    //         }]
+    //     },
+    //     options: {
+    //         legend: { display: true },
+    //         responsive: true,
+    //         maintainAspectRatio: false
+    //     }
+    // });
 
     new Chart("myChart", {
         type: "doughnut",
@@ -366,6 +368,62 @@
             maintainAspectRatio: false
         }
     });
+
+    new Chart("myChart2", {
+    type: "line",
+    data: {
+        labels: dateList, // Your list of dates
+        datasets: [
+            {
+                data: numSpamList,
+                borderColor: "red",
+                fill: false,
+                label: 'Spam',
+            },
+            {
+                data: numNotSpamList,
+                borderColor: "green",
+                fill: false,
+                label: 'Not Spam',
+            }
+        ]
+    },
+    options: {
+        scales: {
+            x: {
+                type: "time", // Use time scale
+                time: {
+                    unit: "year", // Display labels by day
+                },
+                title: {
+                    display: true,
+                    text: "Date"
+                },
+                bounds: "data" // Enable zooming and panning
+            },
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "Count"
+                }
+            }
+        },
+        plugins: {
+            tooltip: {
+                mode: "index",
+                intersect: false,
+            },
+            legend: {
+                display: true,
+                position: "top"
+            },
+        },
+        responsive: true,
+        maintainAspectRatio: false
+    }
+});
+
 
     new Chart("myChart1", {
         type: "bar",
@@ -400,12 +458,6 @@
             }
         }
     });
-
-
-
-
-
 </script>
-
 </body>
 </html>
