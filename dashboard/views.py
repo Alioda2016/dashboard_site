@@ -17,6 +17,8 @@ import random
 from django.db.models import Count, Q  # Import Count and Q
 from django.shortcuts import render
 from . import global_vars
+import time
+
 # Create your views here.
 
 def index(request):
@@ -164,6 +166,148 @@ def process_selected(request):
 # You might want to redirect or return an appropriate response here
 # return HttpResponse("Invalid request method")
 
+def process_all_dashboard(request):
+    selected_rows = Dataset.objects.all()
+    # Start the timer
+    start_time = time.time()
+    # for row in selected_rows:
+    for row in selected_rows[:1000]:
+        prediction_value = random.choice([True, False])
+        # predictor = global_vars.predictor
+        # prediction_value = predictor.predict(row.text)
+        print(prediction_value)
+        if prediction_value == True:
+            prediction_value = 1
+        else:
+            prediction_value = 0
+        print(prediction_value)
+
+        new_result = Result(
+            id=row.id,
+            text=row.text,
+            output=prediction_value,
+            username=row.username,
+            date=row.date)
+        new_result.save()
+        new_result.update_user_count()
+
+    # End the timer
+    end_time = time.time()
+    # Calculate the elapsed time
+    time_in_seconds = end_time - start_time
+
+    # Convert elapsed time to minutes
+    time_in_minutes = 0
+    if time_in_seconds > 60:
+        time_in_minutes = time_in_seconds / 60
+
+    # Query data from the database
+    results = Result.objects.all()
+    # Count the number of 'Yes' and 'No' outputs
+    num_yes = results.filter(output=True).count()
+    num_no = results.filter(output=False).count()
+
+    # Retrieve dates from the Result model and store them in a list
+    dates_list = Result.objects.values_list('date', flat=True).distinct()
+
+    # Convert the dates_list queryset to a Python list
+    dates_list = [str(date) for date in dates_list]
+
+    # print(dates_list)
+
+    # Retrieve dates from the Result model and store them in a list
+    dates_list_1 = Result.objects.values_list('date', flat=True).distinct()
+
+    # Aggregate the number of False values in the output field for each date
+    false_counts_by_date = Result.objects.filter(output=False).values('date').annotate(false_count=Count('output'))
+
+    # Create a dictionary to store the results
+    false_counts_dict = {entry['date']: entry['false_count'] for entry in false_counts_by_date}
+
+    # Create a list of false counts that matches the dates in the date list
+    numSpam_list = [false_counts_dict.get(date, 0) for date in dates_list_1]
+
+    # print(numSpam_list)
+
+    # Retrieve dates from the Result model and store them in a list
+    dates_list_2 = Result.objects.values_list('date', flat=True).distinct()
+
+    # Aggregate the number of True values in the output field for each date
+    true_counts_by_date = Result.objects.filter(output=True).values('date').annotate(true_count=Count('output'))
+
+    # Create a dictionary to store the results
+    true_counts_dict = {entry['date']: entry['true_count'] for entry in true_counts_by_date}
+
+    # Create a list of true counts that matches the dates in the date list
+    numNotSpam_list = [true_counts_dict.get(date, 0) for date in dates_list_2]
+
+    # print(numNotSpam_list)
+
+    # get spam and not spam
+    # Count the number of 'Yes' and 'No' outputs
+    not_spam_data = results.filter(output=True)
+    spam_data = results.filter(output=False)
+
+    # Pagination
+    page_number = request.GET.get('page')
+    paginator = Paginator(spam_data, 5)  # Display 10 items per page
+    page_obj = paginator.get_page(page_number)
+
+    # Pagination1
+    page_number1 = request.GET.get('page1')
+    paginator = Paginator(not_spam_data, 5)  # Display 10 items per page
+    page_obj_1 = paginator.get_page(page_number1)
+    # Get the number of users with user count greater than ten
+    num_users_greater_than_ten = Result.objects.filter(user_count__gt=10).values('username').distinct().count()
+
+    # Get the number of users with user count less than or equal to ten
+    num_users_smaller_than_ten = Result.objects.filter(user_count__lte=10).values('username').distinct().count()
+
+    # Get the number of users with user count equals zero
+    num_users_of_zero_relevant = Result.objects.filter(user_count=0).values('username').distinct().count()
+
+    # Query to get user stats
+    user_stats = Result.objects.values('username').annotate(
+        spam=Count('output', filter=Q(output=False)),
+        not_spam=Count('output', filter=Q(output=True)),
+        total=Count('output', filter=Q(output=False)) + Count('output', filter=Q(output=True))
+    )
+
+    # Create a list of objects with user stats
+    user_stats_list = []
+    for stat in user_stats:
+        user_stat_obj = {
+            'user': stat['username'],
+            'spam': stat['spam'],
+            'not_spam': stat['not_spam'],
+            'total': stat['total']
+        }
+        user_stats_list.append(user_stat_obj)
+
+    print(user_stats_list)
+
+    # Pagination2
+    page_number2 = request.GET.get('page2')
+    paginator = Paginator(user_stats_list, 5)  # Display 10 items per page
+    page_obj_2 = paginator.get_page(page_number2)
+
+    return render(request, 'dashboard_spam.html',
+                  {
+                      'num_yes': num_yes,
+                      'num_no': num_no,
+                      'num_greater_than_ten': num_users_greater_than_ten,
+                      'num_smaller_than_ten': num_users_smaller_than_ten,
+                      'num_of_zero_spam': num_users_of_zero_relevant,
+                      'date_lists': dates_list,
+                      'numSpam_list': numSpam_list,
+                      'numNotSpam_list': numNotSpam_list,
+                      'page_obj': page_obj,
+                      'page_obj_1': page_obj_1,
+                      'page_obj_2': page_obj_2,
+                      "time_in_seconds": time_in_seconds,
+                      "time_in_minutes": time_in_minutes,
+                  })
+
 
 def process_relevant_source(request):
     true_results = Result.objects.filter(output=True)
@@ -184,7 +328,7 @@ def process_relevant_selected(request):
     selected_results = Result.objects.filter(id__in=selected_ids)
 
     for row in selected_results:
-        #prediction_value = random.choice([True, False])
+        # prediction_value = random.choice([True, False])
         predictor = global_vars.predictorBinRev
         prediction_value = predictor.predict(row.text)
         print(prediction_value)
@@ -267,7 +411,7 @@ def process_relevant_selected(request):
     num_users_greater_than_ten = Relevant.objects.filter(user_count__gt=10).values('username').distinct().count()
 
     # Get the number of users with user count less than or equal to ten
-    #num_users_smaller_than_ten = Relevant.objects.filter(user_count__lte=10).values('username').distinct().count()
+    # num_users_smaller_than_ten = Relevant.objects.filter(user_count__lte=10).values('username').distinct().count()
     num_users_smaller_than_ten = Relevant.objects.filter(Q(user_count__lte=10) & Q(user_count__gt=0)).values(
         'username').distinct().count()
     # Get the number of users with user count equals zero
@@ -334,7 +478,7 @@ def categorical_relevant_dashboard(request):
     selected_results = Result.objects.filter(id__in=selected_ids)
 
     for row in selected_results:
-        #prediction_value = random.choice(numbers)
+        # prediction_value = random.choice(numbers)
         predictor = global_vars.predictorCatRev
         prediction_value = predictor.predict(row.text)
         print(prediction_value)

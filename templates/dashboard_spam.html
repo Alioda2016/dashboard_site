@@ -137,9 +137,18 @@
     </style>
 </head>
 <body>
+    
+    {% if time_in_seconds %}
+    <div class="table-card-header" style="text-align: center;">
+        Spam Detection Dashboard <span slot="display: block; background: crimson; width: fit-content;">Time: {{time_in_seconds}} seconds</span>
+    </div>
+
+    {% else %}
     <div class="table-card-header">
         Spam Detection Dashboard
     </div>
+    {% endif %}
+
 
 <div class="container">
     <div class="chart-card">

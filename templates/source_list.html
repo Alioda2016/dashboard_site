@@ -45,7 +45,7 @@
             margin-left: 10rem;
             margin-right: 10rem;
         }
-        button[type="submit"] {
+        button[type="submit"], a {
             background-color: green;
             color: #fff;
             border: none;
@@ -53,9 +53,10 @@
             padding: 0.7rem;
             border-radius: 8px;
             margin-bottom: 2rem;
+            text-decoration: none;
         }
-        button[type="submit"]:hover {
-            background-color: #555;
+        button[type="submit"]:hover, a:hover {
+            background-color: #555555;
         }
              .pagination {
             margin-top: 10px;
@@ -129,6 +130,7 @@
             </span>
         </div>
         <button type="submit">Process Selected</button>
+        <a type="button" style="float: right;" href="{% url 'process_all' %}">Process All</a>
     </form>
 </body>
 </html>
