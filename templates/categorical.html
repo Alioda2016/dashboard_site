@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Relevant</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.0/chart.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -121,13 +124,24 @@
         }
 
 
-
+        .table-card-header {
+            background-color: #5c5454;
+            color: white;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: bold;
+            text-align: center;
+        }
 
 
 
     </style>
 </head>
 <body>
+
+    <div class="table-card-header">
+        Categorical Detection Dashboard
+    </div>
 
 <div class="container">
     <div class="chart-card">
@@ -212,10 +226,26 @@
     var yValues = [num_of_1, num_of_2, num_of_3];
     var barColors = ["red","orange", "green"];
 
+// Convert timestamps to Date objects
+var dateObjects = dateList.map(timestamp => new Date(timestamp));
+
+// Determine the appropriate time unit for labels (day, week, month)
+var timeUnit = 'day'; // Default to day
+if (dateObjects.length > 30) {
+    timeUnit = 'month';
+} else if (dateObjects.length > 7) {
+    timeUnit = 'week';
+}
+
+// Format labels using Moment.js based on the determined time unit
+var formattedDateList = dateObjects.map(date => moment(date).format(timeUnit === 'week' ? 'MMM D' : 'MMM'));
+
+
+
     new Chart("myChart2", {
         type: "line",
         data: {
-            labels: dateList,
+            labels: formattedDateList,
             datasets: [{
                 data: num_ones_list,
                 borderColor: "red",
