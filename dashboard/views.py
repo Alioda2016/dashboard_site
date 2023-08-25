@@ -37,9 +37,10 @@ def process_selected(request):
     for row in selected_rows:
         # prediction_value = random.choice([True, False])
         predictor = global_vars.predictor
-        prediction_value = predictor.predict(new_review)
-        if prediction_value:
-            prediction_value = 'yes'
+        prediction_value = predictor.predict(row.text)
+        print(prediction_value)
+        if prediction_value == 'yes':
+            prediction_value = 1
         else:
             prediction_value = 0
         print(prediction_value)
@@ -183,8 +184,11 @@ def process_relevant_selected(request):
     selected_results = Result.objects.filter(id__in=selected_ids)
 
     for row in selected_results:
-        prediction_value = random.choice([True, False])
-        if prediction_value:
+        #prediction_value = random.choice([True, False])
+        predictor = global_vars.predictorBinRev
+        prediction_value = predictor.predict(row.text)
+        print(prediction_value)
+        if prediction_value == 'yes':
             prediction_value = 1
         else:
             prediction_value = 0
@@ -203,8 +207,8 @@ def process_relevant_selected(request):
         # Query data from the relevant table
     results = Relevant.objects.all()
     # Count the number of 'Yes' and 'No' outputs
-    num_yes = results.filter(relevant=True).count()
-    num_no = results.filter(relevant=False).count()
+    num_yes = results.filter(relevant=False).count()
+    num_no = results.filter(relevant=True).count()
 
     # Retrieve dates from the Relevant model and store them in a list
     dates_list = Relevant.objects.values_list('date', flat=True).distinct()
@@ -218,7 +222,7 @@ def process_relevant_selected(request):
     dates_list_1 = Relevant.objects.values_list('date', flat=True).distinct()
 
     # Aggregate the number of False values in the relevant field for each date
-    false_counts_by_date = Relevant.objects.filter(relevant=False).values('date').annotate(
+    false_counts_by_date = Relevant.objects.filter(relevant=True).values('date').annotate(
         false_count=Count('relevant'))
 
     # Create a dictionary to store the results
@@ -233,7 +237,7 @@ def process_relevant_selected(request):
     dates_list_2 = Relevant.objects.values_list('date', flat=True).distinct()
 
     # Aggregate the number of True values in the relevant field for each date
-    true_counts_by_date = Relevant.objects.filter(relevant=True).values('date').annotate(
+    true_counts_by_date = Relevant.objects.filter(relevant=False).values('date').annotate(
         true_count=Count('relevant'))
 
     # Create a dictionary to store the results
@@ -246,8 +250,8 @@ def process_relevant_selected(request):
 
     # get relevant and not relevant
     # Count the number of 'Yes' and 'No' relevant
-    not_relevant_data = results.filter(relevant=True)
-    relevant_data = results.filter(relevant=False)
+    not_relevant_data = results.filter(relevant=False)
+    relevant_data = results.filter(relevant=True)
 
     # Pagination
     page_number = request.GET.get('page')
@@ -263,16 +267,17 @@ def process_relevant_selected(request):
     num_users_greater_than_ten = Relevant.objects.filter(user_count__gt=10).values('username').distinct().count()
 
     # Get the number of users with user count less than or equal to ten
-    num_users_smaller_than_ten = Relevant.objects.filter(user_count__lte=10).values('username').distinct().count()
-
+    #num_users_smaller_than_ten = Relevant.objects.filter(user_count__lte=10).values('username').distinct().count()
+    num_users_smaller_than_ten = Relevant.objects.filter(Q(user_count__lte=10) & Q(user_count__gt=0)).values(
+        'username').distinct().count()
     # Get the number of users with user count equals zero
     num_users_of_zero_relevant = Relevant.objects.filter(user_count=0).values('username').distinct().count()
 
     # Query to get user stats
     user_stats = Relevant.objects.values('username').annotate(
-        relevant_s=Count('relevant', filter=Q(relevant=False)),
-        not_relevant_s=Count('relevant', filter=Q(relevant=True)),
-        total=Count('relevant', filter=Q(relevant=False)) + Count('relevant', filter=Q(relevant=True))
+        relevant_s=Count('relevant', filter=Q(relevant=True)),
+        not_relevant_s=Count('relevant', filter=Q(relevant=False)),
+        total=Count('relevant', filter=Q(relevant=True)) + Count('relevant', filter=Q(relevant=False))
     )
 
     # Create a list of objects with user stats
@@ -320,16 +325,25 @@ def categorical_relevant_dashboard(request):
     selected_ids = selected_rows.split(",") if selected_rows else []
 
     # Query the selected rows from the Relevant table based on the IDs
-    selected_relevant_results = Relevant.objects.filter(id__in=selected_ids)
+    selected_relevant_results = Result.objects.filter(id__in=selected_ids)
 
     print(selected_relevant_results)
 
     numbers = [1, 2, 3]
     # Now you have the list of selected IDs, you can retrieve the corresponding Result objects
-    selected_results = Relevant.objects.filter(id__in=selected_ids)
+    selected_results = Result.objects.filter(id__in=selected_ids)
 
     for row in selected_results:
-        prediction_value = random.choice(numbers)
+        #prediction_value = random.choice(numbers)
+        predictor = global_vars.predictorCatRev
+        prediction_value = predictor.predict(row.text)
+        print(prediction_value)
+        if prediction_value == 'hig':
+            prediction_value = 3
+        elif prediction_value == 'mid':
+            prediction_value = 2
+        else:
+            prediction_value = 1
         print(prediction_value)
         new_obj = Categorical(
             id=row.id,

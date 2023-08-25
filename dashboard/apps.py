@@ -11,3 +11,5 @@ class DashboardConfig(AppConfig):
     def ready(self):
         import dashboard.global_vars
         global_vars.predictor= ktrain.load_predictor('ar-bert-spamda-model')
+        global_vars.predictorBinRev = ktrain.load_predictor('ar-bert-revBin-model')
+        global_vars.predictorCatRev = ktrain.load_predictor('ar-bert-CatRev-model')
